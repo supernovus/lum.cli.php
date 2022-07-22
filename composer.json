@@ -1,0 +1,33 @@
+{
+  "name": "lum/lum-cli",
+  "description": "Command Line Interface libraries",
+  "license": "MIT",
+  "authors":
+  [
+    {
+      "name": "Timothy Totten",
+      "email": "supernovus@gmail.com",
+      "role": "Original Author"
+    }
+  ],
+  "require":
+  {
+    "lum/lum-compat": "^2.6",
+    "lum/lum-meta": "^1.0",
+    "lum/lum-text": "^1.0"
+  },
+  "autoload":
+  {
+    "psr-4":
+    {
+      "Lum\\CLI\\": "lib"
+    }
+  },
+  "extra":
+  {
+    "branch-alias":
+    {
+      "dev-main": "1.x-dev"
+    }
+  }
+}
