@@ -14,7 +14,7 @@
   {
     "lum/lum-compat": "^2.6",
     "lum/lum-meta": "^1.0",
-    "lum/lum-text": "^1.0"
+    "lum/lum-text": "^2.0"
   },
   "autoload":
   {
