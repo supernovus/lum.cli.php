@@ -29,7 +29,7 @@ namespace Lum\CLI;
  * where {topic} is the name of any ParamGroup you defined to show the
  * full information regarding the specific parameter group.
  */
-abstract class ParamsApp
+abstract class ParamsApp extends Util
 {
   use HasParams, HasHelp, HasError;
 
