@@ -2,9 +2,25 @@
 
 namespace Lum\CLI;
 
+use Lum\Text\Colours as LTC;
+
 /**
  * A trait for application classes to use which provides a couple methods
  * for handling errors and displaying error messages.
+ * 
+ * It's highly recommended to have a property called ``usage_message``
+ * in your class which must be a string template to be used in
+ * usage messages. A placeholder (by default ``{help}``) in the template 
+ * will be replaced by the appropriate parameter information.
+ * 
+ * A few optional properties may be used to add a bit of style to your
+ * error messages:
+ * 
+ * - ``error_prefix``: A prefix for error messages.
+ * - ``error_suffix``: A suffix for error messages.
+ * - ``error_colour``: A colour for error messages.
+ * - ``error_isbold``: Should error_colour be bold?
+ * 
  */
 trait HasError
 {
@@ -38,10 +54,6 @@ trait HasError
    * Not sure why you'd want to do this, but if the $errcode is less than 0
    * or greater than 254, the exit() statement will not be called at all.
    *
-   * Note this requires a class instance property to exist called
-   * 'usage_message' which will be a template with the help placeholder,
-   * which by default is {help} which will be replaced with the appropriate
-   * usage command line parameter.
    */
   public function error ($errmsg, $errcode=1)
   {
@@ -51,26 +63,37 @@ trait HasError
       throw new Exception("getParamsInstance did not return Params instance");
     }
 
-    self::stderr($this->error_prefix);
-    self::stderr("$errmsg\n");
+    $prefix = $this->get_prop('error_prefix');
+    $suffix = $this->get_prop('error_suffix');
+    $colour = $this->get_prop('error_colour');
+    $isbold = $this->get_prop('error_isbold', false);
+
+    if (isset($prefix)) self::stderr($prefix);
+    if (isset($colour)) 
+    { // Colourize the message.
+      $errmsg = LTC::fg($colour, $isbold) . $errmsg . LTC::NORMAL;
+    }
+    
+    self::stderr("$errmsg");
+
+    if (isset($suffix)) self::stderr($suffix);
+    self::stderr("\n");
+
     $usageGroup = $params->getUsageGroup();
-    if (isset($usageGroup))
+    $usageTemplate = $this->get_prop('usage_message');
+    if (isset($usageGroup) && is_string($usageTemplate))
     {
-      $usageTemplate = $this->get_prop('usage_message');
-      if (!is_string($usageTemplate))
-      {
-        throw new Exception("The usage_message property was missing or invalid");
-      }
       $usageParam = $usageGroup->getParam();
       $usageFlag = $usageParam->syntax();
       $usageTag = $params->help_placeholder;
       $usageText = str_replace($usageTag, $usageFlag, $usageTemplate);
       self::stderr("$usageText\n");
     }
+
     if ($errcode > -1 && $errcode < 255)
     {
       exit($errcode);
     }
-  }
+  } // error()
 
 }

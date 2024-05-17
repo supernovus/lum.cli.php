@@ -31,7 +31,7 @@ namespace Lum\CLI;
  */
 abstract class ParamsApp extends Util
 {
-  use HasParams, HasHelp, HasError;
+  use HasParams, HasHelp, HasError, HasMessages;
 
   /**
    * The initialized parameters. Set in the constructor.
